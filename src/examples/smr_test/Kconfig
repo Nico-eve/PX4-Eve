@@ -1,0 +1,5 @@
+menuconfig EXAMPLES_SMR_TEST
+	bool "request_mission_uorbmsg"
+	default n
+	---help---
+		Enable support for request_mission_uorbmsg

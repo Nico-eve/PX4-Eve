@@ -50,7 +50,7 @@
 #include <px4_platform_common/events.h>
 #include <mathlib/mathlib.h>
 #include <matrix/math.hpp>
-#include <navigator/navigation.h>
+#include <eve_navigator/navigation.h>
 #include <uORB/topics/mission.h>
 #include <uORB/topics/mission_result.h>
 

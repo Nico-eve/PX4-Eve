@@ -173,7 +173,10 @@ set(msg_files
 	SensorPreflightMag.msg
 	SensorSelection.msg
 	SensorsStatus.msg
-	SensorsStatusImu.msg
+	SensorsStatusImu.msg	
+	ServerMissionRequest.msg
+	ServerMissionWaypointsRequest.msg
+	ServerMissionState.msg
 	SystemPower.msg
 	TakeoffStatus.msg
 	TaskStackInfo.msg

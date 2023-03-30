@@ -1,0 +1,6 @@
+include(FindPackageHandleStandardArgs)
+find_library(PTHREAD_LIBRARY pthread)
+find_path(PTHREAD_INCLUDE_DIR pthread.h)
+find_package_handle_standard_args(Pthread DEFAULT_MSG PTHREAD_LIBRARY PTHREAD_INCLUDE_DIR)
+mark_as_advanced(PTHREAD_LIBRARY PTHREAD_INCLUDE_DIR)
+

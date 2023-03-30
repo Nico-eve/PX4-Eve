@@ -39,7 +39,7 @@
 #pragma once
 
 #include <string.h>
-#include <navigator/navigation.h>
+#include <eve_navigator/navigation.h>
 #include <uORB/topics/mission.h>
 
 #ifdef __cplusplus

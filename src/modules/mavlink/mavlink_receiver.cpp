@@ -126,6 +126,15 @@ void
 MavlinkReceiver::handle_message(mavlink_message_t *msg)
 {
 	switch (msg->msgid) {
+
+	case MAVLINK_MSG_ID_SERVER_MISSION_REQUEST:
+		handle_message_server_mission_request(msg);
+		break;
+
+	case MAVLINK_MSG_ID_SERVER_MISSION_WAYPOINTS_REQUEST:
+		handle_message_server_mission_waypoints_request(msg);
+		break;
+
 	case MAVLINK_MSG_ID_COMMAND_LONG:
 		handle_message_command_long(msg);
 		break;
@@ -385,6 +394,46 @@ MavlinkReceiver::evaluate_target_ok(int command, int target_system, int target_c
 	}
 
 	return target_ok;
+}
+
+
+void MavlinkReceiver::handle_message_server_mission_request (mavlink_message_t *msg)
+{
+    mavlink_server_mission_request_t requestMission;
+    mavlink_msg_server_mission_request_decode(msg, &requestMission);
+
+    struct server_mission_request_s uorb_smr;
+    memset (&uorb_smr, 0, sizeof(uorb_smr));
+
+    uorb_smr.timestamp = requestMission.timestamp;
+    uorb_smr.lat = requestMission.lat;
+    uorb_smr.lon = requestMission.lon;
+    uorb_smr.alt = requestMission.alt;
+    uorb_smr.yaw = requestMission.yaw;
+    uorb_smr.mission_type = requestMission.mission_type;
+
+    _requestMission_pub.publish(uorb_smr);
+}
+
+void MavlinkReceiver::handle_message_server_mission_waypoints_request (mavlink_message_t *msg)
+{
+    mavlink_server_mission_waypoints_request_t requestMissionWaypoints;
+    mavlink_msg_server_mission_waypoints_request_decode(msg, &requestMissionWaypoints);
+
+    struct server_mission_waypoints_request_s uorb_smwr;
+    memset (&uorb_smwr, 0, sizeof(uorb_smwr));
+
+    uorb_smwr.timestamp = requestMissionWaypoints.timestamp;
+    uorb_smwr.lat = requestMissionWaypoints.lat;
+    uorb_smwr.lon = requestMissionWaypoints.lon;
+    uorb_smwr.alt = requestMissionWaypoints.alt;
+    uorb_smwr.yaw = requestMissionWaypoints.yaw;
+    for(int i=0;i<30;i++)
+        {uorb_smwr.waypoints[i] = requestMissionWaypoints.waypoints[i];}
+    // uorb_smwr.waypoints = requestMissionWaypoints.waypoints;
+    uorb_smwr.mission_type = requestMissionWaypoints.mission_type;
+    uorb_smwr.cruise_alt = requestMissionWaypoints.cruise_alt;
+    _requestMissionWaypoints_pub.publish(uorb_smwr);
 }
 
 void
