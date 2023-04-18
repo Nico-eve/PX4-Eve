@@ -11,6 +11,7 @@
 
 #include <uORB/uORB.h>
 #include <uORB/topics/server_mission_request.h>
+#include <uORB/topics/server_mission_waypoints_request.h>
 
 extern "C" __EXPORT int smr_test_main(int argc, char *argv[]);
 
@@ -19,20 +20,21 @@ int smr_test_main(int argc, char *argv[])
     // PX4_INFO("Hello, I am only a test program able to inject REQUEST MISSION messages.");
 
     // Declare structure to store data that will be sent
-    struct server_mission_request_s requestMission;
+    // struct server_mission_request_s requestMission;
+    struct server_mission_waypoints_request_s requestMission;
 
     // Clear the structure by filling it with 0s in memory
     memset(&requestMission, 0, sizeof(requestMission));
 
     // Create a uORB topic advertisement
-    orb_advert_t server_mission_request_pub = orb_advertise(ORB_ID(server_mission_request), &requestMission);
+    orb_advert_t server_mission_request_pub = orb_advertise(ORB_ID(server_mission_waypoints_request), &requestMission);
 
-    //Sim: 
+    //Sim:
     ////smr_test 47.3980507 8.5456073 498.106 3
     // smr_test 47.3980507 8.5456073 498.106 2
     //smr_test 47.3978507 8.5456073 498.106 2
 
-
+    ////////////////// smr_test 47.3977507 8.5456074 500.0 500.0 4
 
     // smr_test 47.3980507 8.5456073 488.106 500 2
 
@@ -103,8 +105,8 @@ int smr_test_main(int argc, char *argv[])
         requestMission.cruise_alt = c_altsim;
 
         requestMission.mission_type = strtof(argv[5],nullptr);
-        
-        float delta_f = 0.0001f;
+
+        float delta_f = 0.00001f;
         requestMission.waypoints[0] = latAsim+delta_f;
         requestMission.waypoints[1] = lonAsim+delta_f;
         requestMission.waypoints[2] = altsim;
@@ -124,8 +126,8 @@ int smr_test_main(int argc, char *argv[])
         // requestMission.alt  = i+5;
         // requestMission.yaw  = 0.369;
 
-        orb_publish(ORB_ID(server_mission_request), server_mission_request_pub, &requestMission);
-        
+        orb_publish(ORB_ID(server_mission_waypoints_request), server_mission_request_pub, &requestMission);
+
         //sleep for 2s
         usleep (2000000);
         }

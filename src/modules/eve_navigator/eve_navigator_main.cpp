@@ -164,7 +164,7 @@ EveNavigator::EveNavigator() :
 	/* Create a list of our possible navigation types */
 	_navigation_mode_array[0] = &_takeoff;
 	_navigation_mode_array[1] = &_precland;
-	_navigation_mode_array[2] = &_move_to;	
+	_navigation_mode_array[2] = &_move_to;
 	_navigation_mode_array[3] = &_mission;
 	_navigation_mode_array[4] = &_loiter;
 	_navigation_mode_array[5] = &_rtl;
@@ -181,7 +181,7 @@ EveNavigator::EveNavigator() :
 
 	// Update the timeout used in mission_block (which can't hold it's own parameters)
 	// _mission.set_payload_deployment_timeout(_param_mis_payload_delivery_timeout.get());
-	loop_time = hrt_absolute_time();	
+	loop_time = hrt_absolute_time();
 	loop_time2 = hrt_absolute_time();
 	mission_timestamp = hrt_absolute_time()+1000000000;
 	reset_triplets();
@@ -229,8 +229,8 @@ void EveNavigator::update_mission(mission_ &m){
 			// PX4_INFO("timestamp: %f",double(mission_update.timestamp));
 			// PX4_INFO("timestamp - 1_s: %f",double(mission_update.timestamp-2_s));
 
-			// if (mission_update.timestamp-mission_timestamp<3_s)	
-			// {	
+			// if (mission_update.timestamp-mission_timestamp<3_s)
+			// {
 				set_mission(m,mission_update);
 				PX4_INFO("Mission updated");
 			// }
@@ -262,12 +262,12 @@ void EveNavigator::set_mission(mission_ &m,server_mission_waypoints_request_s &i
 {
 	PX4_INFO("Setting mission");
 	if (m.waypoints != nullptr)
-	{		
+	{
 		for (int i = 0; i < numWaypoints; i++) {
 		    	delete[] m.waypoints[i];
 			}
-		delete[] m.waypoints;	
-	}	
+		delete[] m.waypoints;
+	}
 	mission_ new_mission;
 	PX4_INFO("Message infos: lon %f , lat %f",double(incoming_msg.lon),double(incoming_msg.lat));
 	new_mission.type = incoming_msg.mission_type;
@@ -296,16 +296,7 @@ void EveNavigator::set_mission(mission_ &m,server_mission_waypoints_request_s &i
 		waypoint_x[2] = incoming_msg.waypoints[i*3+2];
 	    tempWaypoints[i] = waypoint_x;
 	}
-	// for (int i = 0; i < numWaypoints; i++){
-	// 	// printf("\n Waypoint %d \n",i);
-	// 	for (int j = 0; j < 3; j++)
-	// 	{
-	// 		// printf(" %f \n",double(tempWaypoints[i][j]));
-	// 	}
-	// }
-	// PX4_INFO("Generated waypoints array");
 	new_mission.waypoints = tempWaypoints;
-	// PX4_INFO("set waypoints array to mission");
 	waypoint_i = 0;
 	new_mission.updated = true;
 	m = new_mission;
@@ -360,7 +351,7 @@ void EveNavigator::set_mission(mission_ &m,server_mission_waypoints_request_s &i
 // }
 
 // void EveNavigator::check_mission(mission_ &m,mission_ mission_update){
-// 	if (m.type != mission_update.type || fabsf(m.lon - mission_update.lon) > fabsf(1e-6) 
+// 	if (m.type != mission_update.type || fabsf(m.lon - mission_update.lon) > fabsf(1e-6)
 // 		|| fabsf(m.lat - mission_update.lat) > fabsf(1e-6) || fabsf(m.cruise_alt - mission_update.cruise_alt)>0.5f)
 // 	{
 // 		m.waypoints
@@ -411,7 +402,7 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 				PX4_INFO("Updating!");
 				switch(p){
 					case Phase::Wait_:
-					{	
+					{
 						p = Phase::Arm_;
 						sub_p = SubPhase::Init;
 						break;
@@ -481,7 +472,7 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 				PX4_INFO("Updating!");
 				switch(p){
 					case Phase::Wait_:
-					{	
+					{
 						p = Phase::Arm_;
 						sub_p = SubPhase::Init;
 						break;
@@ -556,7 +547,7 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 				PX4_INFO("Updating!");
 				switch(p){
 					case Phase::Wait_:
-					{	
+					{
 						p = Phase::Arm_;
 						sub_p = SubPhase::Init;
 						break;
@@ -610,7 +601,7 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 				PX4_INFO("Updating!");
 				switch(p){
 					case Phase::Wait_:
-					{	
+					{
 						p = Phase::Arm_;
 						sub_p = SubPhase::Init;
 						break;
@@ -665,7 +656,7 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 				case Phase::MoveToWaypoints_:{
 					// PX4_INFO("MoveToWaypoints_ phase");
 					if (move_to_waypoint_i(m,sub_p))
-						{	
+						{
 							waypoint_i += 1;
 							PX4_INFO("Aiming for waypoint_i: %d",waypoint_i);
 							if (waypoint_i>=numWaypoints)
@@ -696,13 +687,13 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 			break;
 		}
 	}
-	if (hrt_absolute_time()-loop_time > 30_s){ 	
+	if (hrt_absolute_time()-loop_time > 30_s){
 		loop_time = hrt_absolute_time();
 		switch(p)
 		{
 			case Phase::Takeoff_:{
 				// distance_sensor_s local_dist;
-				// if (_distance_sensor_sub.copy(&local_dist)) 
+				// if (_distance_sensor_sub.copy(&local_dist))
 				PX4_INFO("Altitude percentage: %f",double(fabsf(100.0f*(init_alt-get_global_position()->alt)/(init_alt-m.cruise_alt))));
 				// else{
 				// 	PX4_INFO("Can't access altitude data");
@@ -716,7 +707,7 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 				{
 					PX4_INFO("Lon percentage: %f",double(100.0f*fabsf(init_lon*K_amp-float(get_global_position()->lon)*K_amp)/fabsf(init_lon*K_amp-m.lon*K_amp)));
 				}
-				else{					
+				else{
 					PX4_INFO("Lon percentage: %f",double(100.0f*fabsf(init_lon*K_amp-float(get_global_position()->lon)*K_amp)/fabsf(init_lon*K_amp-m.lon*K_amp+0.01f)));
 				}
 				if (fabsf(init_lat*K_amp-m.lat*K_amp)>0.01f)
@@ -724,9 +715,9 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 					PX4_INFO("Lat percentage: %f",double(100.0f*fabsf(init_lat*K_amp-float(get_global_position()->lat)*K_amp)/fabsf(init_lat*K_amp-m.lat*K_amp)));
 				}
 				else{
-					PX4_INFO("Lat percentage: %f",double(100.0f*fabsf(init_lat*K_amp-float(get_global_position()->lat)*K_amp)/fabsf(init_lat*K_amp-m.lat*K_amp+0.01f)));	
+					PX4_INFO("Lat percentage: %f",double(100.0f*fabsf(init_lat*K_amp-float(get_global_position()->lat)*K_amp)/fabsf(init_lat*K_amp-m.lat*K_amp+0.01f)));
 				}
-				
+
 				break;
 			}
 			case Phase::MoveToWaypoints_:{
@@ -736,7 +727,7 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 				{
 					PX4_INFO("Lon percentage: %f",double(100.0f*fabsf(init_lon*K_amp-float(get_global_position()->lon)*K_amp)/fabsf(init_lon*K_amp-m.lon*K_amp)));
 				}
-				else{					
+				else{
 					PX4_INFO("Lon percentage: %f",double(100.0f*fabsf(init_lon*K_amp-float(get_global_position()->lon)*K_amp)/fabsf(init_lon*K_amp-m.lon*K_amp+0.01f)));
 				}
 				if (fabsf(init_lat*K_amp-m.lat*K_amp)>0.01f)
@@ -744,9 +735,9 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 					PX4_INFO("Lat percentage: %f",double(100.0f*fabsf(init_lat*K_amp-float(get_global_position()->lat)*K_amp)/fabsf(init_lat*K_amp-m.lat*K_amp)));
 				}
 				else{
-					PX4_INFO("Lat percentage: %f",double(100.0f*fabsf(init_lat*K_amp-float(get_global_position()->lat)*K_amp)/fabsf(init_lat*K_amp-m.lat*K_amp+0.01f)));	
+					PX4_INFO("Lat percentage: %f",double(100.0f*fabsf(init_lat*K_amp-float(get_global_position()->lat)*K_amp)/fabsf(init_lat*K_amp-m.lat*K_amp+0.01f)));
 				}
-				
+
 				break;
 			}
 			case Phase::PrecLand_:{
@@ -767,7 +758,7 @@ void EveNavigator::next_phase(mission_ &m,int &p,int &sub_p){
 		// 	px4_usleep(10000);
 		// }
 		// update_mission(m);
-	}			
+	}
 
 	return;
 }
@@ -802,11 +793,11 @@ bool EveNavigator::wait_for_arm(int &sub_p){
 			send_vehicle_command(vehicle_command_s::VEHICLE_CMD_COMPONENT_ARM_DISARM,
 			 static_cast<float>(vehicle_command_s::ARMING_ACTION_ARM),
 			 0.f);
-			if (!wait_for_vehicle_command_reply(vehicle_command_s::VEHICLE_CMD_COMPONENT_ARM_DISARM, vehicle_command_ack_sub)) 
+			if (!wait_for_vehicle_command_reply(vehicle_command_s::VEHICLE_CMD_COMPONENT_ARM_DISARM, vehicle_command_ack_sub))
 			{
 				PX4_WARN("Arming command rejected");
 				return false;
-			}	
+			}
 			uORB::SubscriptionData<actuator_armed_s> actuator_armed_sub{ORB_ID(actuator_armed)};
 			hrt_abstime start = hrt_absolute_time();
 			while (hrt_absolute_time() - start < 1_s) {
@@ -827,7 +818,7 @@ bool EveNavigator::battery_check(int &p){
 	hrt_abstime start = hrt_absolute_time();
 	while (hrt_absolute_time() - start < 10_s) {
 		if (battery_status_sub.update()) {
-			if (hrt_absolute_time()-ref_time > 10_s){ 				
+			if (hrt_absolute_time()-ref_time > 10_s){
 				PX4_INFO("Battery remaining: %f %%",double(battery_status_sub.get().remaining*100.0f));
 				ref_time = hrt_absolute_time();
 			}
@@ -849,7 +840,7 @@ bool EveNavigator::battery_check(int &p){
 bool EveNavigator::run_takeoff(mission_ &m,int &sub_p){
 	switch (sub_p){
 		case SubPhase::Init:
-		{	
+		{
 			// px4_sleep(1);
 			send_vehicle_command(vehicle_command_s::VEHICLE_CMD_NAV_TAKEOFF);
 			setup_takeoff(m);
@@ -937,8 +928,8 @@ bool EveNavigator::move_to(mission_ &m,int &sub_p){
 
 void EveNavigator::setup_precland(mission_ &m){
 	position_setpoint_s global_target;
-	global_target.lat = m.lat;	
-	global_target.lon = m.lon;	
+	global_target.lat = m.lat;
+	global_target.lon = m.lon;
 	global_target.alt = m.alt;
 	_precland.set_target(global_target);
 }
@@ -955,7 +946,7 @@ bool EveNavigator::run_precision_land(mission_ &m,int &sub_p){
 			break;
 		}
 		case SubPhase::Progress:
-		{			
+		{
 			_navigation_mode_array[AutoPhase::AutoPrecLand]->run(true);
 			if (landing_update()){
 				sub_p = SubPhase::Complete;
@@ -1020,7 +1011,7 @@ bool EveNavigator::wait_for_state(unsigned state){
 				return true;
 			}
 		}
-	} 
+	}
 	return false;
 }
 
@@ -1281,7 +1272,7 @@ void EveNavigator::setup_takeoff(mission_ &m){
 	// PX4_INFO("Takeoff infos: %f | %f | %f | %f | %f | %f | %f " ,double(rep->previous.yaw),double(rep->previous.lat)
 	// 														,double(rep->previous.lon),double(rep->previous.alt)
 	// 														,double(m.yaw),double(rep->previous.timestamp)
-	// 														,double(get_local_position()->heading)															 
+	// 														,double(get_local_position()->heading)
 	// 														);
 	// CMD_NAV_TAKEOFF is acknowledged by commander
 }
@@ -1413,7 +1404,7 @@ void EveNavigator::run()
 			old_phase = current_phase;
 			old_subphase = current_subphase;
 		}
-	
+
 		// vehicle_local_position_s *vehicle_local_position = get_local_position();
 		// PX4_INFO("Local Pos: ");
 		// PX4_INFO("X: %f",double(vehicle_local_position->x));
@@ -1422,7 +1413,7 @@ void EveNavigator::run()
 		// if (current_mission.type == MissionType::MoveToNest){
 
 		update_mission(current_mission);
-		if (hrt_absolute_time()-loop_time2 > 50_ms) 	
+		if (hrt_absolute_time()-loop_time2 > 50_ms)
 		{
 			server_mission_state_s mission_state;
 			mission_state.timestamp = hrt_absolute_time();
@@ -1497,7 +1488,7 @@ float EveNavigator::get_default_acceptance_radius()
 
 float EveNavigator::get_altitude_acceptance_radius()
 {
-	
+
 	float alt_acceptance_radius = _param_nav_mc_alt_rad.get();
 
 	const position_controller_status_s &pos_ctrl_status = _position_controller_status_sub.get();
